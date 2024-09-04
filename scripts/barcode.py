@@ -29,6 +29,8 @@ def get_book_info(isbn):
         data = response.json()
 
         title = data.get('full_title', 'None')
+        if title is None:
+            title = data.get('title', 'None')
 
         author = ''
         for person in data['authors']:
@@ -49,7 +51,7 @@ def get_book_info(isbn):
         return None
 
 # Art of War testing
-get_book_info('9780007420124')
+# get_book_info('9780007420124')
 
 def barcode_scanner():
     cap = cv2.VideoCapture(0)
@@ -82,4 +84,4 @@ def barcode_scanner():
     cap.release()
     cv2.destroyAllWindows()
 
-# barcode_scanner()
+barcode_scanner()
