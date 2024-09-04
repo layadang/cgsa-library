@@ -31,8 +31,8 @@ def barcode_scanner():
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     
-    # cap.release()
-    # cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     barcode_scanner()
