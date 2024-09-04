@@ -1,6 +1,6 @@
 # CGSA Library Database
 
-This project was created for the Center for Gender, Sexuality & Activism (CGSA) at Boston University. We aims to develop an accessibile web app for students, staff, and visitors of the CGSA to see available books in the library. As the center is entirely student-run, the donated books have not been documented and there are currently no efficient check-out system. This project will address these issues by implementing a user-friendly solution.
+This project is created for the Center for Gender, Sexuality & Activism (CGSA) at Boston University. We aims to develop an accessibile web app for students, staff, and visitors to the center that lets them see available books in the library. As the center is entirely student-run, the donated books have not been documented and there are currently no efficient check-out system. This project will address these issues by implementing a user-friendly solution.
 
 Learn more about the CGSA: https://www.bu.edu/cgsa/about-us/ 
 
