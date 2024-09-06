@@ -20,6 +20,7 @@ import os
 # Sample output for authors:
 # https://openlibrary.org/authors/OL30553A.json 
 
+### GETS BOOK TITLE FROM OPEN LIBRARY API
 def get_book_info(isbn):
     url = f"https://openlibrary.org/isbn/{isbn}.json"
 
@@ -39,45 +40,43 @@ def get_book_info(isbn):
         if subtitle:
             title += ': ' + subtitle
 
-        # author = ''
-        # for person in data['authors']:
-        #     url = f"https://openlibrary.org{(person['key'])}.json"
-        #     response = requests.get(url, headers=headers)
-        #     author_data = response.json()
-        #     name = author_data['alternate_names'][0]
-
-        #     if author == '':
-        #         author = name
-        #     else:
-        #         author += f', {name}'
-
         return title
 
     except requests.exceptions.RequestException as e:
         print(f"ISBN not in database, {e}")
         return None
 
-# print(get_book_info('9780385498418'))
-
 # Art of War testing
 # get_book_info('9780007420124')
 
+### ADDS BOOK ISBN AND TITLE TO A CSV
+
+# path to csv that stores isbn and title info
 script_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(script_dir, '../data/isbn-titles.csv')
 
+# initialize lists for function
 all_isbn = []
 all_titles = []
+pre_isbn = pd.read_csv(file_path)['isbn'].tolist() # to make sure there are no duplicates
+
 def add_book(isbn, title):
     confirmation = input(f"Enter 1 to add book '{title}': ")
-    if confirmation == '1':
+
+    # user must manually confirm title matches, book must also not already be in database
+    if (confirmation == '1') and (isbn not in pre_isbn):
         all_isbn.append(isbn)
+        pre_isbn.append(isbn)
         all_titles.append(title)
 
+        # append new book to csv
         with open(file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([isbn, title])
             print('Added!')
+###
 
+### "BARCODE SCANNER" USING WEBCAM / main function
 def barcode_scanner():
     cap = cv2.VideoCapture(0)
     
@@ -117,5 +116,7 @@ def barcode_scanner():
     
     cap.release()
     cv2.destroyAllWindows()
+###
 
+# calling main function
 barcode_scanner()
