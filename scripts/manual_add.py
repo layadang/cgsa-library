@@ -23,6 +23,11 @@ def add_by_isbn():
 #     if not add_by_isbn():
 #         break 
 
+# ADDING BY ENTERING TITLE BC THESE BOOKS DON'T HAVE BARCODES
+# separate file bc we might print barcode onto them
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, '../data/manual-isbn-titles.csv')
+
 def add_by_title():
     entered = input("Enter book title here or press 'q' to quit: ")
     if entered == 'q':
@@ -30,7 +35,7 @@ def add_by_title():
     
     entered = entered.lower().strip().replace(' ', '+')
     url = f"https://openlibrary.org/search.json?q={entered}"
-
+    print(url)
     headers = {
         'User-Agent': 'CGSA-library-pd03@bu.edu'
     }
@@ -38,7 +43,23 @@ def add_by_title():
     response = requests.get(url, headers=headers)
     data = response.json()
 
-    print(data['docs'][0])
+    # get first result from search
+
+    if data['numFound'] != 0:
+        # list of all isbn for books - only taking the first one that has isbn and title
+        isbn = data['docs'][0]['isbn'][0]
+        title = (data['docs'][0]['title'])
+
+        # confirm book is added
+        confirmation = input(f"Press 1 to add book '{title}' with ISBN {isbn}: ")
+
+        if (confirmation == '1'):
+            with open(file_path, mode='a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([isbn, title])
+                print('Added!')
+    else:
+        print('book not found')
 
     return True
 
