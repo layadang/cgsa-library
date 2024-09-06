@@ -8,6 +8,8 @@ import pandas as pd
 import csv
 import os
 
+genre_dict = {}
+
 def get_book_info(isbn):
     url = f"https://openlibrary.org/isbn/{isbn}.json"
 
@@ -18,15 +20,6 @@ def get_book_info(isbn):
     try:
         response = requests.get(url, headers=headers)
         data = response.json()
-        title = data.get('full_title', None)
-        
-        # TITLE, SUBTITLE
-        if title is None:
-            title = data.get('title', None)
-
-        subtitle = data.get('subtitle', None)
-        if subtitle:
-            title += ': ' + subtitle
 
         # AUTHOR(S)
         author = ''
@@ -55,6 +48,10 @@ def get_book_info(isbn):
                     genre = subject
                 else:
                     genre += f', {subject}'
+                if subject in genre_dict:
+                    genre_dict[subject] += 1
+                else:
+                    genre_dict[subject] = 1
 
         # COVER IMAGE (medium)
         cover = ''
@@ -68,15 +65,14 @@ def get_book_info(isbn):
         else:
             desc = desc_data
 
-        return title, author, genre, cover, desc
+        return author, genre, cover, desc
 
     except requests.exceptions.RequestException as e:
         print(f"ISBN not in database, {e}")
         return None
-    
-get_book_info(9780679434597)
 
-def read_isbn(isbn_csv):
+def read_isbn(isbn_csv, start):
+    count = 0
     script_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(script_dir, isbn_csv)
 
@@ -85,15 +81,46 @@ def read_isbn(isbn_csv):
     isbn_csv = '../data/book_info.csv'    # Generate new csv
     script_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(script_dir, isbn_csv)
+    total = len(isbn_titles.index)
+
+    count = start
+    print()
+    print(str(count) + "/" + str(total) + " completed.", end="\r")
 
     with open(file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(['title', 'author', 'genre', 'cover', 'desc'])
+        if start == 0:
+            writer.writerow(['isbn', 'title', 'author', 'genre', 'cover', 'desc'])
         for i, row in isbn_titles.iterrows():
-            title, author, genre, cover, desc = get_book_info(row['isbn'])
-            writer.writerow([title, author, genre, cover, desc])
-            print('Added!')
-    
+            if i >= start:
+                author, genre, cover, desc = get_book_info(row['isbn'])
+                i_isbn, i_title = row['isbn'], row['title']
+                writer.writerow([i_isbn, i_title, author, genre, cover, desc])
+                count += 1
+                print(str(count) + "/" + str(total) + " completed.", end="\r")
+    print()
     print('Done!')
+    return
 
-read_isbn('../data/isbn-titles.csv')
+def process_dict(g_dict, threshold):
+    for key in list(g_dict.keys()):
+        if g_dict[key] < threshold:
+            del g_dict[key]
+
+    genre_csv = '../data/genre_count.csv'    # Generate new csv
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, genre_csv)
+
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['genre', 'count'])
+        for k in list(g_dict.keys()):
+            writer.writerow([k, g_dict[k]])
+    
+    return g_dict
+
+start_num = int(input("Enter a starting row from isbn-titles.csv: "))
+read_isbn('../data/isbn-titles.csv', start_num)
+
+
+genre_dict = process_dict(genre_dict, 2)
