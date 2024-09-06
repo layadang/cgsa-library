@@ -22,8 +22,11 @@ import os
 
 ### GETS BOOK TITLE FROM OPEN LIBRARY API
 def get_book_info(isbn):
+
+    # API url 
     url = f"https://openlibrary.org/isbn/{isbn}.json"
 
+    # Developer information per open library policy
     headers = {
         'User-Agent': 'CGSA-library-pd03@bu.edu'
     }
@@ -31,11 +34,15 @@ def get_book_info(isbn):
     try:
         response = requests.get(url, headers=headers)
         data = response.json()
+
+        # if full_title index exists
         title = data.get('full_title', None)
 
+        # then there is probably title
         if title is None:
             title = data.get('title', None)
 
+        # in case there's a second path
         subtitle = data.get('subtitle', None)
         if subtitle:
             title += ': ' + subtitle
@@ -46,9 +53,6 @@ def get_book_info(isbn):
         print(f"ISBN not in database, {e}")
         return None
 
-# Art of War testing
-# get_book_info('9780007420124')
-
 ### ADDS BOOK ISBN AND TITLE TO A CSV
 
 # path to csv that stores isbn and title info
@@ -58,7 +62,8 @@ file_path = os.path.join(script_dir, '../data/isbn-titles.csv')
 # initialize lists for function
 all_isbn = []
 all_titles = []
-pre_isbn = pd.read_csv(file_path)['isbn'].tolist() # to make sure there are no duplicates
+# to make sure there are no duplicates
+pre_isbn = pd.read_csv(file_path)['isbn'].tolist() 
 
 def add_book(isbn, title):
     confirmation = input(f"Enter 1 to add book '{title}': ")
@@ -119,4 +124,5 @@ def barcode_scanner():
 ###
 
 # calling main function
-barcode_scanner()
+if __name__ == "__main__":
+    barcode_scanner()
