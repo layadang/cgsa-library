@@ -30,16 +30,19 @@ def get_book_info(isbn):
 
         # AUTHOR(S)
         author = ''
-        for person in data['authors']:
-            url = f"https://openlibrary.org{(person['key'])}.json"
-            response = requests.get(url, headers=headers)
-            author_data = response.json()
-            name = author_data['name']
+        if 'authors' in data:
+            for person in data['authors']:
+                url = f"https://openlibrary.org{(person['key'])}.json"
+                response = requests.get(url, headers=headers)
+                author_data = response.json()
+                name = author_data['name']
 
-            if author == '':
-                author = name
-            else:
-                author += f', {name}'
+                if author == '':
+                    author = name
+                else:
+                    author += f', {name}'
+        else:
+            author = 'N/A'
 
         # GENRE
         genre = ''
@@ -64,22 +67,33 @@ def get_book_info(isbn):
             desc = "N/A"
         else:
             desc = desc_data
-        
-        # CSV
-        isbn_csv = '../data/' + str(isbn) + '.csv'    # Generate new csv
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(script_dir, isbn_csv)
 
-        with open(file_path, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            for item in [title, author, genre, cover, desc]:
-                writer.writerow([item])
-            print('Added!')
-
-        return title
+        return title, author, genre, cover, desc
 
     except requests.exceptions.RequestException as e:
         print(f"ISBN not in database, {e}")
         return None
     
 get_book_info(9780679434597)
+
+def read_isbn(isbn_csv):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, isbn_csv)
+
+    isbn_titles = pd.read_csv(file_path)
+
+    isbn_csv = '../data/book_info.csv'    # Generate new csv
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, isbn_csv)
+
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['title', 'author', 'genre', 'cover', 'desc'])
+        for i, row in isbn_titles.iterrows():
+            title, author, genre, cover, desc = get_book_info(row['isbn'])
+            writer.writerow([title, author, genre, cover, desc])
+            print('Added!')
+    
+    print('Done!')
+
+read_isbn('../data/isbn-titles.csv')
