@@ -20,9 +20,13 @@ import os
 # Sample output for authors:
 # https://openlibrary.org/authors/OL30553A.json 
 
+### GETS BOOK TITLE FROM OPEN LIBRARY API
 def get_book_info(isbn):
+
+    # API url 
     url = f"https://openlibrary.org/isbn/{isbn}.json"
 
+    # Developer information per open library policy
     headers = {
         'User-Agent': 'CGSA-library-pd03@bu.edu'
     }
@@ -30,26 +34,18 @@ def get_book_info(isbn):
     try:
         response = requests.get(url, headers=headers)
         data = response.json()
+
+        # if full_title index exists
         title = data.get('full_title', None)
 
+        # then there is probably title
         if title is None:
             title = data.get('title', None)
 
+        # in case there's a second path
         subtitle = data.get('subtitle', None)
         if subtitle:
             title += ': ' + subtitle
-
-        # author = ''
-        # for person in data['authors']:
-        #     url = f"https://openlibrary.org{(person['key'])}.json"
-        #     response = requests.get(url, headers=headers)
-        #     author_data = response.json()
-        #     name = author_data['alternate_names'][0]
-
-        #     if author == '':
-        #         author = name
-        #     else:
-        #         author += f', {name}'
 
         return title
 
@@ -57,27 +53,35 @@ def get_book_info(isbn):
         print(f"ISBN not in database, {e}")
         return None
 
-# print(get_book_info('9780385498418'))
+### ADDS BOOK ISBN AND TITLE TO A CSV
 
-# Art of War testing
-# get_book_info('9780007420124')
-
+# path to csv that stores isbn and title info
 script_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(script_dir, '../data/isbn-titles.csv')
 
+# initialize lists for function
 all_isbn = []
 all_titles = []
+# to make sure there are no duplicates
+pre_isbn = pd.read_csv(file_path)['isbn'].tolist() 
+
 def add_book(isbn, title):
     confirmation = input(f"Enter 1 to add book '{title}': ")
-    if confirmation == '1':
+
+    # user must manually confirm title matches, book must also not already be in database
+    if (confirmation == '1') and (isbn not in pre_isbn):
         all_isbn.append(isbn)
+        pre_isbn.append(isbn)
         all_titles.append(title)
 
+        # append new book to csv
         with open(file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([isbn, title])
             print('Added!')
+###
 
+### "BARCODE SCANNER" USING WEBCAM / main function
 def barcode_scanner():
     cap = cv2.VideoCapture(0)
     
@@ -117,5 +121,8 @@ def barcode_scanner():
     
     cap.release()
     cv2.destroyAllWindows()
+###
 
-barcode_scanner()
+# calling main function
+if __name__ == "__main__":
+    barcode_scanner()
