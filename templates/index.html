@@ -7,7 +7,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2> Welcome to the</h2>
-    <h1>Center for Gender, Sexuality & Activism (CGSA) Library!</h1>
+    <div class="intro">
+        <h2> Welcome to the</h2>
+        <h1>Center for Gender, Sexuality & Activism (CGSA) Library!</h1>
+    </div>
+
+    <div class="main">
+    <h2>Browse All Books: </h2>
+    <div class="all-books">
+        {% for title, cover in zip(titles, covers) %}
+        <div class="book">
+            <img src="{{ cover }}" alt="{{ title }} cover">
+            <div class="book-title">{{ title }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    </div>
+    
+
 </body>
 </html>

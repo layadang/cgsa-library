@@ -1,3 +1,17 @@
 body {
     text-align: center;
 }
+
+.main {
+    text-align: left;
+}
+
+.all-books {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+}
+
+.book {
+    margin-right: 15px;
+}
