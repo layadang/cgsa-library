@@ -1,17 +1,154 @@
+:root {
+    --color_1: #7455d7;
+    --color_2: #55d78e;
+    --color_3: #d7c255;
+    --color_4: #fa8ded;
+    --color_5: #b6a3f6;
+    --color_6: #2f2f3b;
+    --color_7: #f2e9e6;
+}
+/* General Body Styles */
 body {
-    text-align: center;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color_7);
+    color: var(--color_6);
 }
 
+/* Navigation Bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color_1); /* Dark purple */
+    padding: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 1.5em;
+    color: white;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-links li {
+    margin-right: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.1em;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color:  var(--color_5); /* Light lavender */
+}
+
+/* Header Section */
+.header {
+    text-align: center;
+    padding: 50px 20px;
+    background-color:  var(--color_4);
+    color: white;
+}
+
+.header h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 1.2em;
+    margin-top: 0;
+}
+
+/* Search Bar */
+.search-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    background-color: var(--color_5); /* Light purple background */
+}
+
+.search-bar {
+    width: 50%;
+    padding: 10px;
+    font-size: 1.1em;
+    border: 2px solid  var(--color_1);
+    border-radius: 25px 0 0 25px;
+    outline: none;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: var(--color_1);
+    color: white;
+    border: 2px solid  var(--color_1);
+    border-radius: 0 25px 25px 0;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+.search-button:hover {
+    background-color: var(--color_5); /* Hover effect for button */
+}
+
+/* Main Section */
 .main {
-    text-align: left;
+    padding: 40px;
+    text-align: center;
 }
 
 .all-books {
     display: flex;
-    flex-direction: row;
-    overflow-x: auto;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .book {
-    margin-right: 15px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 180px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.book-cover {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.book-title {
+    margin-top: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--color_1);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color:var(--color_1);
+    color: var(--color_7);
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
 }
