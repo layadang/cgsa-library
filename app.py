@@ -20,3 +20,6 @@ def home():
                            zip=zip,
                            titles=titles, 
                            covers=covers)
+
+if __name__ == '__main__':
+    app.run(debug=True)

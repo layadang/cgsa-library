@@ -7,23 +7,48 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="intro">
-        <h2> Welcome to the</h2>
-        <h1>Center for Gender, Sexuality & Activism (CGSA) Library!</h1>
-    </div>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">CGSA Library</div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Catalog</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
 
-    <div class="main">
-    <h2>Browse All Books: </h2>
-    <div class="all-books">
-        {% for title, cover in zip(titles, covers) %}
-        <div class="book">
-            <img src="{{ cover }}" alt="{{ title }} cover">
-            <div class="book-title">{{ title }}</div>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="intro">
+            <h2>Welcome to the</h2>
+            <h1>Center for Gender, Sexuality & Activism<br>Library</h1>
+            <p>An entirely student-run library at Boston University featuring books of diverse genres</p>
         </div>
-        {% endfor %}
-    </div>
-    </div>
-    
+    </header>
 
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" placeholder="Search for books..." class="search-bar">
+        <button class="search-button">Search</button>
+    </div>
+
+    <!-- Main Content: Books Section -->
+    <div class="main">
+        <h2>Browse All Books:</h2>
+        <div class="all-books">
+            {% for title, cover in zip(titles, covers) %}
+            <div class="book">
+                <img src="{{ cover }}" alt="{{ title }} cover" class="book-cover">
+                <div class="book-title">{{ title }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Database and site from scratch by two unpaid BU students. <a href="https://github.com/layadang/cgsa-library" target="_blank">See our code</a>?</p>
+    </footer>
 </body>
 </html>
